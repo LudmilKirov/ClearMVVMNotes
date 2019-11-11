@@ -13,8 +13,7 @@ public class NoteRepository {
     //TODO remove the appdatabase
     //TODO how to get
     public NoteRepository(Application application) {
-        AppDatabase database = AppDatabase.getInstance(application);
-        noteDao = database.noteDao();
+        noteDao = AppDatabase.getInstance(application).noteDao();
         allNotes = noteDao.getAllNote();
     }
 
