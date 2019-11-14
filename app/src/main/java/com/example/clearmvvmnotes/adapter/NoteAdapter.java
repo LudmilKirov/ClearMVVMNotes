@@ -4,6 +4,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 
 public class NoteAdapter extends ListAdapter<Note,NoteAdapter.NoteHolder> {
     private static final String TAG = "NoteAdapter";
-    private OnNoteListener mOnNoteListener;
+    private OnItemClickListener listener;
     private ArrayList<Note> mNotes = new ArrayList<>();
 
     public NoteAdapter() {
@@ -90,9 +91,18 @@ public class NoteAdapter extends ListAdapter<Note,NoteAdapter.NoteHolder> {
             Log.d(TAG, "onClick: " + getAdapterPosition());
             mOnNoteListener.onNoteClick(getAdapterPosition());
         }
+
     }
 
     public interface OnNoteListener{
         void onNoteClick(int position);
+    }
+
+    public  interface OnItemClickListener{
+        void onItemClick(Note note);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener){
+        this.listener = listener;
     }
 }

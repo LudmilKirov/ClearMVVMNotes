@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 import android.os.AsyncTask;
 
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -20,10 +21,11 @@ public class NoteViewModel extends ViewModel {
     private MutableLiveData<Boolean> mutableLiveData = new MutableLiveData<>();
 
     public NoteViewModel(Application application) {
-      repository=new NoteRepository(application);
-      allNotes=repository.getAllNotes();
-      setBooleanLiveData(true);
-      setListLiveData(allNotes);
+        super();
+        repository = new NoteRepository(application);
+        allNotes = repository.getAllNotes();
+        setBooleanLiveData(true);
+        setListLiveData(allNotes);
     }
 
     public MutableLiveData<Boolean> getMutableLiveData() {
@@ -31,39 +33,39 @@ public class NoteViewModel extends ViewModel {
     }
 
     public void setBooleanLiveData(boolean b) {
-      mutableLiveData.setValue(b);
+        mutableLiveData.setValue(b);
     }
 
     public void setListLiveData(List<Note> notes) {
-      listLiveData.setValue(notes);
+        listLiveData.setValue(notes);
     }
 
-    public MutableLiveData<List<Note>> getAllNotes(){
+    public MutableLiveData<List<Note>> getAllNotes() {
         return listLiveData;
     }
 
 
-    public void insert(Note note){
+    public void insert(Note note) {
         new InsertNoteAsyncTask(repository).execute(note);
     }
 
-    public void update(Note note){
+    public void update(Note note) {
         new UpdateAsyncTask(repository).execute(note);
     }
 
-    public void delete(Note note){
+    public void delete(Note note) {
         new DeleteAsyncTask(repository).execute(note);
     }
 
-    public void deleteAll(){
+    public void deleteAll() {
         new DeleteAllNotesAsyncTask(repository).execute();
     }
 
-    private class InsertNoteAsyncTask extends AsyncTask<Note,Void,Void> {
+    private class InsertNoteAsyncTask extends AsyncTask<Note, Void, Void> {
         private NoteRepository noteRepository;
 
-        private InsertNoteAsyncTask(NoteRepository noteRepository){
-            this.noteRepository=noteRepository;
+        private InsertNoteAsyncTask(NoteRepository noteRepository) {
+            this.noteRepository = noteRepository;
         }
 
         @Override
@@ -90,11 +92,11 @@ public class NoteViewModel extends ViewModel {
     }
 
     @SuppressLint("StaticFieldLeak")
-    private class UpdateAsyncTask extends AsyncTask<Note,Void,Void> {
+    private class UpdateAsyncTask extends AsyncTask<Note, Void, Void> {
         private NoteRepository noteRepository;
 
-        private UpdateAsyncTask(NoteRepository noteRepository){
-            this.noteRepository=noteRepository;
+        private UpdateAsyncTask(NoteRepository noteRepository) {
+            this.noteRepository = noteRepository;
         }
 
         @Override
@@ -121,11 +123,11 @@ public class NoteViewModel extends ViewModel {
     }
 
 
-    private class DeleteAsyncTask extends AsyncTask<Note,Void,Void> {
+    private class DeleteAsyncTask extends AsyncTask<Note, Void, Void> {
         private NoteRepository noteRepository;
 
-        private DeleteAsyncTask(NoteRepository noteRepository){
-            this.noteRepository=noteRepository;
+        private DeleteAsyncTask(NoteRepository noteRepository) {
+            this.noteRepository = noteRepository;
         }
 
         @Override
@@ -151,11 +153,11 @@ public class NoteViewModel extends ViewModel {
         }
     }
 
-    private class DeleteAllNotesAsyncTask extends AsyncTask<Note,Void,Void> {
+    private class DeleteAllNotesAsyncTask extends AsyncTask<Note, Void, Void> {
         private NoteRepository noteRepository;
 
-        private DeleteAllNotesAsyncTask(NoteRepository noteRepository){
-            this.noteRepository=noteRepository;
+        private DeleteAllNotesAsyncTask(NoteRepository noteRepository) {
+            this.noteRepository = noteRepository;
         }
 
         @Override
@@ -180,7 +182,6 @@ public class NoteViewModel extends ViewModel {
             setBooleanLiveData(true);
         }
     }
-
 
 
 }
