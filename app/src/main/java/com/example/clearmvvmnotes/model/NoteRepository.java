@@ -8,13 +8,13 @@ import java.util.List;
 
 public class NoteRepository {
     private NoteDao noteDao;
-    private List<Note> allNotes;
+
 
     //TODO remove the appdatabase
     //TODO how to get
     public NoteRepository(Application application) {
         noteDao = AppDatabase.getInstance(application).noteDao();
-        allNotes = noteDao.getAllNote();
+
     }
 
     public void insert(Note note) {
@@ -34,6 +34,6 @@ public class NoteRepository {
     }
 
     public List<Note> getAllNotes() {
-        return allNotes;
+        return noteDao.getAllNote();
     }
 }

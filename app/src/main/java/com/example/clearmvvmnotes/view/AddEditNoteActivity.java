@@ -13,9 +13,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.example.clearmvvmnotes.R;
-import com.example.clearmvvmnotes.viewmodel.NoteViewModel;
+import com.example.clearmvvmnotes.model.Note;
+import com.example.clearmvvmnotes.viewmodel.AddEditNoteActivityViewModel;
+import com.example.clearmvvmnotes.viewmodel.MainActivityViewModel;
 
 public class AddEditNoteActivity extends AppCompatActivity {
     public static final String EXTRA_TITLE =
@@ -29,31 +34,14 @@ public class AddEditNoteActivity extends AppCompatActivity {
     private EditText editTextTitle;
     private EditText editTextDescription;
     private NumberPicker numberPickerPriority;
+    private AddEditNoteActivityViewModel addEditNoteActivityViewModel;
+    private AlertDialog mAlertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_note);
-
-//        noteViewModel = ViewModelProviders.of(this).get(NoteViewModel.class);
-//        //Create the dialog for the loading
-//        AlertDialog.Builder builder = new AlertDialog.Builder(AddEditNoteActivity.this);
-//        builder.setMessage("Loading");
-//        builder.setCancelable(false);
-//        mAlertDialog = builder.create();
-//
-//        //Create the observer for the live data that changes in the async task for add method.
-//        noteViewModel.getBooleanValue().observe(this, new Observer<Boolean>() {
-//            @Override
-//            public void onChanged(Boolean aBoolean) {
-//                if (!aBoolean) {
-//                    mAlertDialog.show();
-//                } else {
-//                    mAlertDialog.hide();
-//                }
-//            }
-//        });
-
+        addEditNoteActivityViewModel = ViewModelProviders.of(this).get(AddEditNoteActivityViewModel.class);
 
         editTextTitle = findViewById(R.id.edit_text_title);
         editTextDescription = findViewById(R.id.edit_text_description);
@@ -62,10 +50,8 @@ public class AddEditNoteActivity extends AppCompatActivity {
         numberPickerPriority.setMinValue(1);
         numberPickerPriority.setMaxValue(10);
 
-
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
         Intent intent = getIntent();
-
 
         //Only if it is update
         if (intent.hasExtra(EXTRA_ID)) {
@@ -76,6 +62,23 @@ public class AddEditNoteActivity extends AppCompatActivity {
         } else {
             setTitle("Add Note");
         }
+
+        //Create the dialog for the loading
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Loading");
+        builder.setCancelable(false);
+        mAlertDialog = builder.create();
+        //Create the observer for the live data that changes in the async task for add method.
+        addEditNoteActivityViewModel.getBooleanForDialog().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (!aBoolean) {
+                    mAlertDialog.show();
+                } else {
+                    mAlertDialog.hide();
+                }
+            }
+        });
     }
 
     @Override
@@ -112,19 +115,21 @@ public class AddEditNoteActivity extends AppCompatActivity {
             return;
         }
 
-        //To send data to the activity that started this one
-        Intent data = new Intent();
-        data.putExtra(EXTRA_TITLE, title);
-        data.putExtra(EXTRA_DESCRIPTION, description);
-        data.putExtra(EXTRA_PRIORITY, priority);
+//        //To send data to the activity that started this one
+//        Intent data = new Intent();
+//        data.putExtra(EXTRA_TITLE, title);
+//        data.putExtra(EXTRA_DESCRIPTION, description);
+//        data.putExtra(EXTRA_PRIORITY, priority);
 
+        Note note = new Note(title,description,priority);
+        addEditNoteActivityViewModel.insert(note);
         //Put only if is -1
-        int id = getIntent().getIntExtra(EXTRA_ID, -1);
-        if (id != -1) {
-            data.putExtra(EXTRA_ID, id);
-        }
-
-        setResult(RESULT_OK, data);
+//        int id = getIntent().getIntExtra(EXTRA_ID, -1);
+//        if (id != -1) {
+//            data.putExtra(EXTRA_ID, id);
+//        }
+//
+//        setResult(RESULT_OK, data);
 
         Toast.makeText(AddEditNoteActivity.this,"Test",Toast.LENGTH_SHORT).show();
         finish();
